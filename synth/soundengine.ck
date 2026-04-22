@@ -1,8 +1,3 @@
-//------------------------------------------------------------
-// 53-grain OSC-controlled looping granular engine
-//
-//------------------------------------------------------------
-
 
 [
     "audio 1/a/high/raspy a high.wav",
@@ -13,10 +8,46 @@
     "audio 1/a/mid/supported a mid.wav",
     "audio 1/a/low/Raspy a low.wav",
     "audio 1/a/low/breathy a low.wav",
-    "audio 1/a/low/Supported a low.wav"
+    "audio 1/a/low/Supported a low.wav",
+    "audio 1/e/high/raspy e high.wav",
+    "audio 1/e/high/breathy e high.wav",
+    "audio 1/e/high/supported e high.wav",
+    "audio 1/e/mid/raspy e mid.wav",
+    "audio 1/e/mid/breathy e mid.wav",
+    "audio 1/e/mid/supported e mid.wav",
+    "audio 1/e/low/raspy e low.wav",
+    "audio 1/e/low/breathy e low.wav",
+    "audio 1/e/low/supported e low.wav",
+    "audio 1/i/high/raspy i high.wav",
+    "audio 1/i/high/breathy i high.wav",
+    "audio 1/i/high/supported i high.wav",
+    "audio 1/i/mid/raspy i mid.wav",
+    "audio 1/i/mid/breathy i mid.wav",
+    "audio 1/i/mid/supported i mid.wav",
+    "audio 1/i/low/raspy i low.wav",
+    "audio 1/i/low/breathy i low.wav",
+    "audio 1/i/low/supported i low.wav",
+    "audio 1/o/high/raspy o high.wav",
+    "audio 1/o/high/breathy o high.wav",
+    "audio 1/o/high/supported o high.wav",
+    "audio 1/o/mid/raspy o mid.wav",
+    "audio 1/o/mid/breathy o mid.wav",
+    "audio 1/o/mid/supported o mid.wav",
+    "audio 1/o/low/raspy o low.wav",
+    "audio 1/o/low/breathy o low.wav",
+    "audio 1/o/low/supported o low.wav",
+    "audio 1/u/high/raspy u high.wav",
+    "audio 1/u/high/breathy u high.wav",
+    "audio 1/u/high/supported u high.wav",
+    "audio 1/u/mid/raspy u mid.wav",
+    "audio 1/u/mid/breathy u mid.wav",
+    "audio 1/u/mid/supported u mid.wav",
+    "audio 1/u/low/raspy u low.wav",
+    "audio 1/u/low/breathy u low.wav",
+    "audio 1/u/low/supported u low.wav"
 ] @=> string sampleFiles[];
 
-5 => int sampleIndex;
+0 => int sampleIndex;
 sampleFiles[sampleIndex] => string filename;
 
 // OSC port
@@ -26,9 +57,7 @@ sampleFiles[sampleIndex] => string filename;
 53 => int NUM_GRAINS;
 25::ms => dur grainDur;
 4.0::ms => dur grainAttack;
-
 50::ms => dur grainInterval;
-
 
 float grainVolumes[NUM_GRAINS];
 for (0 => int i; i < NUM_GRAINS; i++)
@@ -36,63 +65,11 @@ for (0 => int i; i < NUM_GRAINS; i++)
     0.3 => grainVolumes[i];
 }
 
+0 => int totalSamples;
+0 => int grainSamples;
+0 => int maxStartSample;
 
-// =========================
-// load source once for analysis
-// =========================
-
-SndBuf src => blackhole;
-filename => src.read;
-
-src.samples() => int totalSamples;
-
-if (totalSamples <= 0)
-{
-    <<< "ERROR: could not load file:", filename >>>;
-    me.exit();
-}
-
-(grainDur / samp) $ int => int grainSamples;
-totalSamples - grainSamples => int maxStartSample;
-
-if (maxStartSample < 0)
-{
-    <<< "ERROR: file shorter than one grain." >>>;
-    me.exit();
-}
-
-<<< "Loaded file:", filename >>>;
-<<< "Total samples:", totalSamples >>>;
-<<< "Actual sample rate:", second / samp >>>;
-<<< "OSC port:", OSC_PORT >>>;
-
-
-// =========================
-// choose 53 fixed random grain starts
-// =========================
-
-int grainStarts[NUM_GRAINS];
-
-for (0 => int i; i < NUM_GRAINS; i++)
-{
-    Math.random2(0, maxStartSample) => grainStarts[i];
-    <<< "grain", i, "start sample =", grainStarts[i] >>>;
-}
-
-
-// =========================
-// OSC receiver
-// 53 addresses:
-//
-// 1 interval address:
-//   /grainInterval
-//
-// all messages carry one float
-// =========================
-
-OscRecv recv;
-OSC_PORT => recv.port;
-recv.listen();
+0 => int sampleVersion;
 
 
 // =========================
@@ -101,10 +78,64 @@ recv.listen();
 
 fun float clamp01(float x)
 {
-    if (x < 0.0) return Math.min (1.0, - x);
+    if (x < 0.0) return Math.min(-x, 1.0);
     if (x > 1.0) return 1.0;
     return x;
 }
+
+
+fun void refreshSampleState()
+{
+    SndBuf temp => blackhole;
+
+    sampleFiles[sampleIndex] => filename;
+    filename => temp.read;
+
+    temp.samples() => totalSamples;
+
+    if (totalSamples <= 0)
+    {
+        <<< "ERROR: could not load file:", filename >>>;
+        return;
+    }
+
+    (grainDur / samp) $ int => grainSamples;
+    totalSamples - grainSamples => maxStartSample;
+
+    if (maxStartSample < 0)
+    {
+        <<< "ERROR: file shorter than one grain:", filename >>>;
+        0 => maxStartSample;
+    }
+
+    sampleVersion++;
+
+    <<< "Loaded file:", filename >>>;
+    <<< "Sample index:", sampleIndex >>>;
+    <<< "Total samples:", totalSamples >>>;
+    <<< "Actual sample rate:", second / samp >>>;
+    <<< "maxStartSample:", maxStartSample >>>;
+    <<< "sampleVersion:", sampleVersion >>>;
+}
+
+
+refreshSampleState();
+
+if (totalSamples <= 0)
+{
+    me.exit();
+}
+
+<<< "OSC port:", OSC_PORT >>>;
+
+
+// =========================
+// OSC receiver
+// =========================
+
+OscRecv recv;
+OSC_PORT => recv.port;
+recv.listen();
 
 
 // =========================
@@ -115,7 +146,6 @@ fun void volumeListener(int index)
 {
     OscEvent oe;
     recv.event("/controller" + index + ", f") @=> oe;
-    <<<oe.getFloat()>>>;
 
     while (true)
     {
@@ -157,10 +187,15 @@ fun void intervalListener()
     }
 }
 
+
+// =========================
+// OSC listener for attack
+// =========================
+
 fun void attackListener()
 {
     OscEvent oe;
-    recv.event("/control/throttle1, f") @=> oe;
+    recv.event("/controller/throttle1, f") @=> oe;
 
     while (true)
     {
@@ -171,7 +206,6 @@ fun void attackListener()
             oe.getFloat() => float attackMs;
 
             if (attackMs < 1.0) 1.0 => attackMs;
-
             if (attackMs > 20.0) 20.0 => attackMs;
 
             attackMs::ms => grainAttack;
@@ -182,10 +216,14 @@ fun void attackListener()
 }
 
 
+// =========================
+// OSC listener for sample index
+// =========================
+
 fun void sampleIndexListener()
 {
     OscEvent oe;
-    recv.event("/control/throttle2, f") @=> oe;
+    recv.event("/controller/throttle2, f") @=> oe;
 
     while (true)
     {
@@ -195,44 +233,59 @@ fun void sampleIndexListener()
         {
             oe.getFloat() => float thisIndex;
 
-            Math.floor(thisIndex * 9) $ int => sampleIndex;
+            Math.floor(thisIndex * sampleFiles.size()) $ int => int newIndex;
 
-            sampleFiles[sampleIndex] => filename;
+            if (newIndex < 0) 0 => newIndex;
+            if (newIndex >= sampleFiles.size()) sampleFiles.size() - 1 => newIndex;
 
-            <<< "Updated sample =", sampleIndex >>>;
+            if (newIndex != sampleIndex)
+            {
+                newIndex => sampleIndex;
+                refreshSampleState();
+                <<< "Updated sample =", sampleIndex >>>;
+            }
         }
     }
 }
+
+
 // =========================
 // one looping grain voice
 // each voice owns:
 //   - its own SndBuf
 //   - its own ADSR
-//   - one fixed startSample
-//
-// it keeps retriggering forever
 // =========================
 
-fun void grainVoice(int index, int startSample)
+fun void grainVoice(int index)
 {
     SndBuf g => ADSR env => dac;
+    SndBuf g1 => env => dac;
+    SndBuf g2 => env => dac;
+    SndBuf g3 => env => dac;
+    SndBuf g4 => env => dac;
 
-    -1 => int lastSampleIndex;
+    -1 => int localSampleIndex;
+    -1 => int localSampleVersion;
 
     5::ms => dur decay;
     0.8 => float sustainLevel;
     5::ms => dur release;
 
-    index::samp => now;
+    (index * 2)::ms => now;
 
     while (true)
     {
-        if (sampleIndex != lastSampleIndex)
+        if (localSampleVersion != sampleVersion || localSampleIndex != sampleIndex)
         {
             sampleFiles[sampleIndex] => g.read;
-            sampleIndex => lastSampleIndex;
+            sampleIndex => localSampleIndex;
+            sampleVersion => localSampleVersion;
+            sampleFiles[sampleIndex + 9] => g1.read;
+            sampleFiles[sampleIndex + 18] => g2.read;
+            sampleFiles[sampleIndex + 27] => g3.read;
+            sampleFiles[sampleIndex + 36] => g4.read;
 
-            if (g.samples() <= 0)
+            if (g4.samples() <= 0)
             {
                 <<< "ERROR: failed to load sample", sampleIndex >>>;
                 100::ms => now;
@@ -241,7 +294,19 @@ fun void grainVoice(int index, int startSample)
         }
 
         clamp01(grainVolumes[index]) => g.gain;
-        Math.random2(0, g.samples() - 1) => g.pos;
+        clamp01(grainVolumes[index]) => g1.gain;
+        clamp01(grainVolumes[index]) => g2.gain;
+        clamp01(grainVolumes[index]) => g3.gain;
+        clamp01(grainVolumes[index]) => g4.gain;
+
+        if (g.samples() > 0)
+        {
+            Math.random2(0, g.samples() - 1) => g.pos;
+            Math.random2(0, g.samples() - 1) => g1.pos;
+            Math.random2(0, g.samples() - 1) => g2.pos;
+            Math.random2(0, g.samples() - 1) => g3.pos;
+            Math.random2(0, g.samples() - 1) => g4.pos;
+        }
 
         grainAttack => dur attack;
 
@@ -263,6 +328,7 @@ fun void grainVoice(int index, int startSample)
     }
 }
 
+
 // =========================
 // start OSC listeners
 // =========================
@@ -283,7 +349,7 @@ spork ~ sampleIndexListener();
 
 for (0 => int i; i < NUM_GRAINS; i++)
 {
-    spork ~ grainVoice(i, grainStarts[i]);
+    spork ~ grainVoice(i);
 }
 
 
