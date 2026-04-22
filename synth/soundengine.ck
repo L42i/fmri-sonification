@@ -258,11 +258,11 @@ fun void sampleIndexListener()
 
 fun void grainVoice(int index)
 {
-    SndBuf g => ADSR env => dac;
-    SndBuf g1 => env => dac;
-    SndBuf g2 => env => dac;
-    SndBuf g3 => env => dac;
-    SndBuf g4 => env => dac;
+    SndBuf g => ADSR env => dac.chan(index);
+    SndBuf g1 => env;
+    SndBuf g2 => env;
+    SndBuf g3 => env;
+    SndBuf g4 => env;
 
     -1 => int localSampleIndex;
     -1 => int localSampleVersion;
@@ -280,12 +280,13 @@ fun void grainVoice(int index)
             sampleFiles[sampleIndex] => g.read;
             sampleIndex => localSampleIndex;
             sampleVersion => localSampleVersion;
-            sampleFiles[sampleIndex + 9] => g1.read;
-            sampleFiles[sampleIndex + 18] => g2.read;
-            sampleFiles[sampleIndex + 27] => g3.read;
-            sampleFiles[sampleIndex + 36] => g4.read;
 
-            if (g4.samples() <= 0)
+            if (sampleIndex + 9 < sampleFiles.size())  sampleFiles[sampleIndex + 9]  => g1.read;
+            if (sampleIndex + 18 < sampleFiles.size()) sampleFiles[sampleIndex + 18] => g2.read;
+            if (sampleIndex + 27 < sampleFiles.size()) sampleFiles[sampleIndex + 27] => g3.read;
+            if (sampleIndex + 36 < sampleFiles.size()) sampleFiles[sampleIndex + 36] => g4.read;
+
+            if (g.samples() <= 0)
             {
                 <<< "ERROR: failed to load sample", sampleIndex >>>;
                 100::ms => now;
@@ -302,10 +303,22 @@ fun void grainVoice(int index)
         if (g.samples() > 0)
         {
             Math.random2(0, g.samples() - 1) => g.pos;
-            Math.random2(0, g.samples() - 1) => g1.pos;
-            Math.random2(0, g.samples() - 1) => g2.pos;
-            Math.random2(0, g.samples() - 1) => g3.pos;
-            Math.random2(0, g.samples() - 1) => g4.pos;
+        }
+        if (g1.samples() > 0)
+        {
+            Math.random2(0, g1.samples() - 1) => g1.pos;
+        }
+        if (g2.samples() > 0)
+        {
+            Math.random2(0, g2.samples() - 1) => g2.pos;
+        }
+        if (g3.samples() > 0)
+        {
+            Math.random2(0, g3.samples() - 1) => g3.pos;
+        }
+        if (g4.samples() > 0)
+        {
+            Math.random2(0, g4.samples() - 1) => g4.pos;
         }
 
         grainAttack => dur attack;
