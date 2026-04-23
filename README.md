@@ -13,6 +13,10 @@ controller, ....
 
 ## Install and Setup
 
+In the desktop audio settings, use KT audio and select "pro audio"
+
+
+
 ### Python Setup
 
 Create and activate vit env:
