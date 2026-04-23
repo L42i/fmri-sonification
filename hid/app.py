@@ -1,5 +1,4 @@
 import sys
-from PyQt5 import QtCore
 from PyQt5.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -14,7 +13,7 @@ from PyQt5.QtWidgets import (
     QLineEdit,
     QPlainTextEdit
 )
-from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtCore import QSize
 from sequencer import SequencerThread
 
 class MainWindow(QMainWindow):
