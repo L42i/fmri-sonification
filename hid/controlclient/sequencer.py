@@ -1,9 +1,7 @@
 import time
-import csv
 import os
 from pythonosc import udp_client
 from PyQt5.QtCore import QThread, pyqtSignal
-import numpy as np
 import pygame
 
 # the axis-label reading approach from yoke.py
@@ -61,7 +59,7 @@ def get_axis_value_by_label(joysticks, target_labels):
 class SequencerThread(QThread):
     status = pyqtSignal(str)
 
-    # default variable initializing (don't touch most of this, except deadzones and scales)
+    # default variable initializing (don't touch most of this, except deadzones and thresholds)
     def __init__(self, filepath):
         super().__init__()
         self.filepath = filepath
@@ -69,10 +67,9 @@ class SequencerThread(QThread):
         self.is_stopped = False
         self.ip = "127.0.0.1" # default ip
         self.port = 1337 # default port
-        self.row = 0
         self.client = None
-        self.axis_scale = 5.0 # adjusts the sliding window scaling
-        self.axis_deadzone = 0.10
+        self.axis_deadzone = 0.10 
+        self.change_threshold = 0.01
 
     def run(self):
 
@@ -97,38 +94,8 @@ class SequencerThread(QThread):
                     f"Joystick[{idx}] {js.get_name()} | kind={classify(js.get_name())} | axes={js.get_numaxes()} buttons={js.get_numbuttons()}"
                 )
 
-            column_ranges = self.get_column_ranges()
-            if not column_ranges:
-                self.status.emit("Error: no numeric data found in file")
-                return
-
-            # row sequencing portion; goes through each cell, normalizes the value based on min/max (0 to 1), and adds (appends) it to the normalized_row list 
-            normalized_rows = []
-            with open(self.filepath, newline="") as f:
-                for row in csv.reader(f):
-                    normalized_row = []
-                    for idx, cell in enumerate(row):
-                        try:
-                            value = float(cell)
-                        except ValueError:
-                            continue
-
-                        data_min, data_max = column_ranges.get(idx, (None, None))
-                        if data_min is None or data_max is None:
-                            continue
-
-                        normalized_row.append(self.normalize_minmax(value, data_min, data_max))
-
-                    if normalized_row:
-                        normalized_rows.append(normalized_row)
-
-            if not normalized_rows:
-                self.status.emit("Error: no numeric rows found in file")
-                return
-
-
-            # osc message sending portion
-            prevRow = None
+            prev_roll = None
+            prev_elevator = None
             while not self.is_stopped:
                 while self.is_paused and not self.is_stopped:
                     time.sleep(0.05)
@@ -137,24 +104,28 @@ class SequencerThread(QThread):
                     self.status.emit("Stopped")
                     return
 
-                # core of the osc message sending
-                index = int(np.clip(self.row, 0, len(normalized_rows) - 1))
-                if index != prevRow: # only sends if the row (index) currently isn't the same as before
-                    self.client.send_message("/data", normalized_rows[index]) # sends the osc messages -> sends a List with the values at address "/data"
-                    prevRow = index
-                    self.status.emit(
-                        f"Sent /data: {index}, IP: {self.ip}, Port: {self.port}" # this is just for the log or "terminal", not the actual osc message
-                    )
+                pygame.event.pump() # refreshes axis values (don't touch)
 
-                pygame.event.pump() # refreshes the joystick values (don't touch)
-                axis_value = get_axis_value_by_label(joysticks, ["elevator (pitch)"]) # the actual value we're getting from the joystick
+                # the actual values (goes from -1 to 1)
+                roll = get_axis_value_by_label(joysticks, ["aileron (roll)"])
+                elevator = get_axis_value_by_label(joysticks, ["elevator (pitch)"])
 
-                # deadzoning control; adjust with self.axis_deadzone variable near the top
-                if abs(axis_value) < self.axis_deadzone:
-                    axis_value = 0.0
+                # deadzoning controls
+                if abs(roll) < self.axis_deadzone:
+                    roll = 0.0
+                if abs(elevator) < self.axis_deadzone:
+                    elevator = 0.0
 
-                # the actual "sliding window" line; exponential scaling, adjust it with the self.axis_scale variable near the top
-                self.row += (-axis_value ** 3) * self.axis_scale
+                # core of osc message sending (for now just roll and elevator)
+                if prev_roll is None or abs(roll - prev_roll) >= self.change_threshold:
+                    self.client.send_message("/controller/roll", roll) # sends the osc messages -> sends the value (as a float), at address "/controller/roll"
+                    prev_roll = roll
+                    self.status.emit(f"Sent /controller/roll: {roll:+.4f}, IP: {self.ip}, Port: {self.port}") # this is just for the log or "terminal", not the actual osc message
+
+                if prev_elevator is None or abs(elevator - prev_elevator) >= self.change_threshold:
+                    self.client.send_message("/controller/elevator", elevator) # sends the osc messages -> sends the value (as a float), at address "/controller/elevator"
+                    prev_elevator = elevator
+                    self.status.emit(f"Sent /controller/elevator: {elevator:+.4f}, IP: {self.ip}, Port: {self.port}") # this is just for the log or "terminal", not the actual osc message
 
                 time.sleep(0.05) 
 
@@ -187,28 +158,3 @@ class SequencerThread(QThread):
     def set_ip(self, ip):
         self.ip = ip
         self.client = udp_client.SimpleUDPClient(self.ip, self.port)
-
-    def set_row(self, row):
-        self.row = row
-
-    def get_column_ranges(self):
-        column_values = {}
-        with open(self.filepath, newline="") as f:
-            for row in csv.reader(f):
-                for idx, cell in enumerate(row):
-                    try:
-                        value = float(cell)
-                    except ValueError:
-                        continue
-                    column_values.setdefault(idx, []).append(value)
-
-        ranges = {}
-        for idx, values in column_values.items():
-            if values:
-                ranges[idx] = (min(values), max(values))
-        return ranges
-
-    def normalize_minmax(self, value, data_min, data_max):
-        if data_max == data_min:
-            return 0
-        return (value - data_min) / (data_max - data_min)
