@@ -1,0 +1,198 @@
+<!DOCTYPE patchbay>
+<patchbay name="fmri" version="0.6.1">
+ <items>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out31" node="REAPER"/>
+   <input port="KT-USB:playback_AUX30" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out45" node="REAPER"/>
+   <input port="KT-USB:playback_AUX44" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out19" node="REAPER"/>
+   <input port="KT-USB:playback_AUX18" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out14" node="REAPER"/>
+   <input port="KT-USB:playback_AUX13" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out28" node="REAPER"/>
+   <input port="KT-USB:playback_AUX27" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out9" node="REAPER"/>
+   <input port="KT-USB:playback_AUX8" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out24" node="REAPER"/>
+   <input port="KT-USB:playback_AUX23" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out40" node="REAPER"/>
+   <input port="KT-USB:playback_AUX39" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out11" node="REAPER"/>
+   <input port="KT-USB:playback_AUX10" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out38" node="REAPER"/>
+   <input port="KT-USB:playback_AUX37" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out6" node="REAPER"/>
+   <input port="KT-USB:playback_AUX5" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out25" node="REAPER"/>
+   <input port="KT-USB:playback_AUX24" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out48" node="REAPER"/>
+   <input port="KT-USB:playback_AUX47" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out12" node="REAPER"/>
+   <input port="KT-USB:playback_AUX11" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out15" node="REAPER"/>
+   <input port="KT-USB:playback_AUX14" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out46" node="REAPER"/>
+   <input port="KT-USB:playback_AUX45" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out17" node="REAPER"/>
+   <input port="KT-USB:playback_AUX16" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out33" node="REAPER"/>
+   <input port="KT-USB:playback_AUX32" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out29" node="REAPER"/>
+   <input port="KT-USB:playback_AUX28" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out20" node="REAPER"/>
+   <input port="KT-USB:playback_AUX19" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out34" node="REAPER"/>
+   <input port="KT-USB:playback_AUX33" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out44" node="REAPER"/>
+   <input port="KT-USB:playback_AUX43" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out47" node="REAPER"/>
+   <input port="KT-USB:playback_AUX46" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out23" node="REAPER"/>
+   <input port="KT-USB:playback_AUX22" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out5" node="REAPER"/>
+   <input port="KT-USB:playback_AUX4" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out21" node="REAPER"/>
+   <input port="KT-USB:playback_AUX20" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out16" node="REAPER"/>
+   <input port="KT-USB:playback_AUX15" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out35" node="REAPER"/>
+   <input port="KT-USB:playback_AUX34" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out30" node="REAPER"/>
+   <input port="KT-USB:playback_AUX29" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out42" node="REAPER"/>
+   <input port="KT-USB:playback_AUX41" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out10" node="REAPER"/>
+   <input port="KT-USB:playback_AUX9" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out43" node="REAPER"/>
+   <input port="KT-USB:playback_AUX42" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out2" node="REAPER"/>
+   <input port="KT-USB:playback_AUX1" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out13" node="REAPER"/>
+   <input port="KT-USB:playback_AUX12" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out32" node="REAPER"/>
+   <input port="KT-USB:playback_AUX31" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out22" node="REAPER"/>
+   <input port="KT-USB:playback_AUX21" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out18" node="REAPER"/>
+   <input port="KT-USB:playback_AUX17" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out3" node="REAPER"/>
+   <input port="KT-USB:playback_AUX2" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out39" node="REAPER"/>
+   <input port="KT-USB:playback_AUX38" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out7" node="REAPER"/>
+   <input port="KT-USB:playback_AUX6" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out4" node="REAPER"/>
+   <input port="KT-USB:playback_AUX3" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out27" node="REAPER"/>
+   <input port="KT-USB:playback_AUX26" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out37" node="REAPER"/>
+   <input port="KT-USB:playback_AUX36" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out36" node="REAPER"/>
+   <input port="KT-USB:playback_AUX35" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out1" node="REAPER"/>
+   <input port="KT-USB:playback_AUX0" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out41" node="REAPER"/>
+   <input port="KT-USB:playback_AUX40" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out8" node="REAPER"/>
+   <input port="KT-USB:playback_AUX7" node="KT-USB Pro"/>
+  </item>
+  <item port-type="pipewire-audio" node-type="pipewire">
+   <output port="REAPER:out26" node="REAPER"/>
+   <input port="KT-USB:playback_AUX25" node="KT-USB Pro"/>
+  </item>
+ </items>
+</patchbay>
+
