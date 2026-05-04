@@ -29,11 +29,12 @@ try:
     pos[1] = max(-1, min(1, pos[1]))
     pos[2] = max(-1, min(1, -state['axes'][2]))
 
+    # pos => ICST
+    icst.send('/icst/ambi/group/xyz', ['Brain', pos[0], pos[1], pos[2], 1])
+
     # row => ChucK
     row = scale(state['axes'][4], -1, 1, 0, len(d))
     chuck.send('/row', d[int(row)])
-
-    icst.send('/icst/ambi/group/xyz', ['Brain', pos[0], pos[1], pos[2], 1])
 
     time.sleep(0.05)  # 20 Hz
 

@@ -1,24 +1,23 @@
 global int N;
-global float current[N][6];
+global float current[N][2];
 
+// magic numbers
 -4.298912525177 => float magicMin;
 6.28821420669556 => float magicMax;
 
 LiSa lisas[N];
+Gain gains[N];
 
 for (int i; i < N; i++) {
-  lisas[i] => (i => dac.chan);
+  lisas[i] => gains[i] => (i => dac.chan);
 
   8 => lisas[i].maxVoices;
+  0.02 => gains[i].gain;
 
   spork ~ grains(i);
 }
 
-"/Users/tristanpeng/Documents/CS/Projects/fmri-sonification/samples/3/e/mid/supported.wav" => read;
-
-fun void read(string name) {
-  for (int i; i < N; i++) name => lisas[i].read;
-}
+for (int i; i < N; i++) me.dir() + "../samples/hc" + i + ".wav" => lisas[i].read;
 
 fun void grain(int i) {
   lisas[i] @=> LiSa @ lisa;
@@ -27,10 +26,10 @@ fun void grain(int i) {
 
   if (voice > -1) {
     (current[i][1], magicMin, magicMax, 0.5, 1.5) => Math.map => float rate;
-    (current[i][2], 0, 1, 0, lisa.duration() / samp) => Math.map => float pos;
-    current[i][3]::ms => dur len;
-    current[i][4]::ms => dur up;
-    current[i][5]::ms => dur down;
+    (0, lisa.duration() / samp) => Math.random2f => float pos;
+    100::ms => dur len;
+    5::ms => dur up;
+    5::ms => dur down;
 
     (voice, rate) => lisa.rate;
     (voice, pos::samp) => lisa.playPos;
