@@ -1,2 +1,2 @@
 .idea/
-data/data/*.csv
+*/.DS_Store
