@@ -1,4 +1,9 @@
-python-osc
-pygame
-numpy
-PyQt5
+numpy==2.4.4
+pandas==3.0.2
+pygame==2.6.1
+PyQt5==5.15.11
+PyQt5-Qt5==5.15.18
+PyQt5_sip==12.18.0
+python-dateutil==2.9.0.post0
+python-osc==1.10.2
+six==1.17.0

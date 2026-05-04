@@ -1,1 +1,1 @@
-chuck -c53 --driver:JACK main.ck
+chuck -c53 --driver:JACK synth/main.ck
