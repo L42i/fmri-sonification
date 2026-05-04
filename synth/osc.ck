@@ -1,5 +1,6 @@
 global int N;
 global float current[N][2];
+global Event fire;
 
 OscIn oin;
 
@@ -16,7 +17,8 @@ while (true) {
   oin => now;
 
   while (msg => oin.recv) {
-    if (msg.address != "/row") continue;
+    if (msg.address == "/fire") fire.broadcast();
+    else if (msg.address != "/row") continue;
 
     (msg.numArgs(), N) => Math.min => int end;
     for (int n; n < end; n++) {
