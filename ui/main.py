@@ -32,6 +32,7 @@ try:
     elif state['buttons'][1] == 0 and fire:
       fire = False
       chuck.send('/fire', 0)
+      print('control' if is_hc else 'schizophrenia')
 
     # update pos
     pos[0] += state['axes'][0] * 0.06
@@ -46,10 +47,10 @@ try:
 
     # row => ChucK
     if is_hc:
-      row = scale(state['axes'][3], -1, 1, 0, len(hc))
+      row = hc[int(scale(state['axes'][3], -1, 1, 0, len(hc)))]
     else:
-      row = scale(state['axes'][3], -1, 1, 0, len(sz))
-    chuck.send('/row', hc[int(row)])
+      row = sz[int(scale(state['axes'][3], -1, 1, 0, len(sz)))]
+    chuck.send('/row', row)
 
     time.sleep(0.05)  # 20 Hz
 

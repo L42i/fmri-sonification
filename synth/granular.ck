@@ -40,9 +40,9 @@ fun void grain(int i) {
   if (voice > -1) {
     (current[i][1], magicMin, magicMax, 0.1, 100) => Math.map => float rate;
     (0, lisa.duration() / samp) => Math.random2f => float pos;
-    (1000, 2000) => Math.random2f => float len;
-    50::ms => dur up;
-    50::ms => dur down;
+    (10, 50) => Math.random2f => float len;
+    5::ms => dur up;
+    5::ms => dur down;
 
     (current[i][1], magicMin, magicMax, 0.1, 0) => Math.map => gains[i].gain;
 
